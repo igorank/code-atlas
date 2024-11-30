@@ -1,7 +1,7 @@
 #pragma once
 #include <wx/wx.h>
 
-class CatalogApp: public wxApp
+class App: public wxApp
 {
 	public:
 		virtual bool OnInit();
