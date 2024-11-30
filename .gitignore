@@ -1,0 +1,40 @@
+# Игнорируем все папки сборки
+Debug/
+x64/
+
+# Игнорируем временные файлы Visual Studio
+*.VC.db
+*.VC.VC.opendb
+*.VC.db-wal
+*.VC.db-shm
+
+# Игнорируем файлы пользователей Visual Studio
+*.vcxproj.user
+
+# Игнорируем файлы проектов Visual Studio
+*.vcxproj
+*.vcxproj.filters
+
+# Игнорируем резервные файлы и временные
+*.bak
+*.tmp
+*.log
+*.obj
+*.pch
+*.idb
+*.ilk
+*.tlog
+*.lastbuildstate
+
+# Игнорируем автогенерируемые файлы
+*.ipch
+*.sdf
+*.opensdf
+
+# Оставляем только исходники
+!*.cpp
+!*.h
+
+# Игнорируем другие системные файлы
+Thumbs.db
+.DS_Store
