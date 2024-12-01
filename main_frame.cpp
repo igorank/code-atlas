@@ -12,15 +12,21 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     menuFile->Append(wxID_ADD, "&Add Book");
     menuFile->Append(wxID_EDIT, "&Edit Book");
     menuFile->Append(wxID_DELETE, "&Delete Book");
+    menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT, "&Exit");
+    
+    wxMenu* menuHelp = new wxMenu;
+    menuHelp->Append(wxID_ABOUT, "&About\tCtrl-A", "Show information about this program");
 
     wxMenuBar* menuBar = new wxMenuBar;
     menuBar->Append(menuFile, "&File");
+    menuBar->Append(menuHelp, "&Help");
     SetMenuBar(menuBar);
 
     Bind(wxEVT_MENU, &MainFrame::OnAddBook, this, wxID_ADD);
     Bind(wxEVT_MENU, &MainFrame::OnEditBook, this, wxID_EDIT);
     Bind(wxEVT_MENU, &MainFrame::OnDeleteBook, this, wxID_DELETE);
+    Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, [&](wxCommandEvent&) { Close(); }, wxID_EXIT);
 
     bookList = new wxDataViewListCtrl(this, wxID_ANY, wxDefaultPosition, wxSize(800, 400));
@@ -73,6 +79,11 @@ void MainFrame::OnEditBook(wxCommandEvent& event) {
         db.UpdateBook(dlg.GetBook());
         LoadBooks();
     }
+}
+
+void MainFrame::OnAbout(wxCommandEvent& event) {
+    AboutDialog dlg(this);
+    dlg.ShowModal();
 }
 
 void MainFrame::OnDeleteBook(wxCommandEvent& event) {
