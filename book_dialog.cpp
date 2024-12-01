@@ -57,7 +57,7 @@ void BookDialog::OnSave(wxCommandEvent& event) {
 
 BookModel BookDialog::GetBook() const {
     return {
-        -1,
+        currentBookId,
         titleCtrl->GetValue().ToStdString(),
         authorCtrl->GetValue().ToStdString(),
         languageCtrl->GetStringSelection().ToStdString(),
@@ -72,4 +72,5 @@ void BookDialog::SetBook(const BookModel& book) {
     languageCtrl->SetStringSelection(book.language);
     yearCtrl->SetValue(book.year);
     descriptionCtrl->SetValue(book.description);
+    currentBookId = book.id;
 }

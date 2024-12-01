@@ -19,5 +19,7 @@ private:
     wxTextCtrl* descriptionCtrl;
 
     void OnSave(wxCommandEvent& event);
+
+    int currentBookId = -1;
 };
 
