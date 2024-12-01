@@ -30,6 +30,8 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     bookList->AppendTextColumn("Year", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
     bookList->AppendTextColumn("Description", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
 
+    bookList->Bind(wxEVT_CHAR_HOOK, &MainFrame::OnKeyDown, this);
+
     LoadBooks();
 }
 
@@ -83,4 +85,21 @@ void MainFrame::OnDeleteBook(wxCommandEvent& event) {
     int bookId = db.GetBooks()[selectedRow].id;
     db.DeleteBook(bookId);
     LoadBooks();
+}
+
+void MainFrame::OnKeyDown(wxKeyEvent& event) {
+    if (event.GetKeyCode() == WXK_DELETE) {
+        int selectedRow = bookList->GetSelectedRow();
+        if (selectedRow == wxNOT_FOUND) {
+            wxMessageBox("Please select a book to delete.");
+            return;
+        }
+
+        int bookId = db.GetBooks()[selectedRow].id;
+        db.DeleteBook(bookId);
+        LoadBooks();
+    }
+    else {
+        event.Skip();
+    }
 }

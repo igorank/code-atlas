@@ -15,6 +15,8 @@ private:
 	void OnAddBook(wxCommandEvent& event);
 	void OnEditBook(wxCommandEvent& event);
 	void OnDeleteBook(wxCommandEvent& event);
+	
+	void OnKeyDown(wxKeyEvent& event);
 
 public:
 	MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
