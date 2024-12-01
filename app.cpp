@@ -3,7 +3,7 @@
 
 bool App::OnInit()
 {
-    MainFrame* frame = new MainFrame("CodeAtlas", wxPoint(50, 50), wxSize(450, 340));
+    MainFrame* frame = new MainFrame("CodeAtlas", wxDefaultPosition, wxSize(640, 480));
     frame->Show(true);
     return true;
 }

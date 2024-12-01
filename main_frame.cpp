@@ -18,11 +18,11 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     Bind(wxEVT_MENU, [&](wxCommandEvent&) { Close(); }, wxID_EXIT);
 
     bookList = new wxDataViewListCtrl(this, wxID_ANY, wxDefaultPosition, wxSize(800, 400));
-    bookList->AppendTextColumn("Title");
-    bookList->AppendTextColumn("Author");
-    bookList->AppendTextColumn("Language");
-    bookList->AppendTextColumn("Year");
-    bookList->AppendTextColumn("Description");
+    bookList->AppendTextColumn("Title", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
+    bookList->AppendTextColumn("Author", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
+    bookList->AppendTextColumn("Language", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
+    bookList->AppendTextColumn("Year", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
+    bookList->AppendTextColumn("Description", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
 
     LoadBooks();
 }

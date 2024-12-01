@@ -1,7 +1,7 @@
 #include "book_dialog.h"
 
 BookDialog::BookDialog(wxWindow* parent, const wxString& title)
-    : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(400, 300)) {
+    : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(400, 500)) {
 
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -21,7 +21,7 @@ BookDialog::BookDialog(wxWindow* parent, const wxString& title)
     mainSizer->Add(languageCtrl, 0, wxEXPAND | wxALL, 5);
 
     mainSizer->Add(new wxStaticText(this, wxID_ANY, "Year"), 0, wxALL, 5);
-    yearCtrl = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1900, 2100);
+    yearCtrl = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1900, 2025);
     mainSizer->Add(yearCtrl, 0, wxEXPAND | wxALL, 5);
 
     mainSizer->Add(new wxStaticText(this, wxID_ANY, "Description"), 0, wxALL, 5);
@@ -34,7 +34,7 @@ BookDialog::BookDialog(wxWindow* parent, const wxString& title)
 
     mainSizer->Add(btnSizer, 0, wxALIGN_CENTER);
 
-    SetSizerAndFit(mainSizer);
+    SetSizer(mainSizer);
 
     Bind(wxEVT_BUTTON, &BookDialog::OnSave, this, wxID_OK);
 }
