@@ -2,6 +2,12 @@
 
 MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size): wxFrame(NULL, wxID_ANY, title, pos, size), db("catalog.db")
 {
+    wxIcon appIcon;
+    if (!appIcon.LoadFile("icon.ico", wxBITMAP_TYPE_ICO)) {
+        wxMessageBox("Failed to load icon!", "Error", wxOK | wxICON_ERROR);
+    }
+    SetIcon(appIcon);
+
 	wxMenu* menuFile = new wxMenu;
     menuFile->Append(wxID_ADD, "&Add Book");
     menuFile->Append(wxID_EDIT, "&Edit Book");
