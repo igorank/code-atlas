@@ -52,6 +52,11 @@ void BookDialog::OnSave(wxCommandEvent& event) {
         wxMessageBox("Please select a programming language.", "Validation Error", wxOK | wxICON_ERROR);
         return;
     }
+
+    wxString sanitizedDescription = descriptionCtrl->GetValue();
+    sanitizedDescription.Replace("\n", "");
+    descriptionCtrl->SetValue(sanitizedDescription);
+
     EndModal(wxID_OK);
 }
 

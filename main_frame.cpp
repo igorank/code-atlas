@@ -50,7 +50,8 @@ void MainFrame::LoadBooks() {
         data.push_back(wxVariant(wxString(book.author)));
         data.push_back(wxVariant(wxString(book.language)));
         data.push_back(wxVariant(wxString::Format("%d", book.year)));
-        data.push_back(wxVariant(wxString(book.description)));
+        
+        data.push_back(wxVariant(wxString(truncateText(book.description, 100))));
 
         bookList->AppendItem(data);
     }

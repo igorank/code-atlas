@@ -4,6 +4,7 @@
 #include "database.h"
 #include "book_dialog.h"
 #include "about_dialog.h"
+#include "utils.h"
 
 class MainFrame : public wxFrame
 {
