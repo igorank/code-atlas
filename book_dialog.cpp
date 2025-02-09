@@ -18,6 +18,13 @@ BookDialog::BookDialog(wxWindow* parent, const wxString& title)
     languageCtrl->Append("C++");
     languageCtrl->Append("Python");
     languageCtrl->Append("JavaScript");
+    languageCtrl->Append("Go");
+    languageCtrl->Append("Java");
+    languageCtrl->Append("Ruby");
+    languageCtrl->Append("Swift");
+    languageCtrl->Append("PHP");
+    languageCtrl->Append("C#");
+    languageCtrl->Append("Kotlin");
     mainSizer->Add(languageCtrl, 0, wxEXPAND | wxALL, 5);
 
     mainSizer->Add(new wxStaticText(this, wxID_ANY, "Year"), 0, wxALL, 5);
