@@ -49,11 +49,16 @@ void MainFrame::LoadBooks() {
     auto books = db.GetBooks();
     std::sort(books.begin(), books.end(), [&](const BookModel& a, const BookModel& b) {
         switch (sortColumn) {
-        case 0: return sortAscending ? a.title < b.title : a.title > b.title;
-        case 1: return sortAscending ? a.author < b.author : a.author > b.author;
-        case 2: return sortAscending ? a.language < b.language : a.language > b.language;
-        case 3: return sortAscending ? a.year < b.year : a.year > b.year;
-        case 4: return sortAscending ? a.description < b.description : a.description > b.description;
+        case 0: return sortAscending ? (a.id < b.id) : (a.id > b.id);
+        case 1: return sortAscending ? a.title < b.title : a.title > b.title;
+        case 2: return sortAscending ? a.author < b.author : a.author > b.author;
+        case 3: return sortAscending ? a.language < b.language : a.language > b.language;
+        case 4: return sortAscending ? a.year < b.year : a.year > b.year;
+        case 5: {
+            std::string descA = a.description.substr(0, 100);
+            std::string descB = b.description.substr(0, 100);
+            return sortAscending ? descA < descB : descA > descB;
+        }
         default: return true;
         }
         });
@@ -66,7 +71,6 @@ void MainFrame::LoadBooks() {
         data.push_back(wxVariant(wxString(book.author)));
         data.push_back(wxVariant(wxString(book.language)));
         data.push_back(wxVariant(wxString::Format("%d", book.year)));
-        
         data.push_back(wxVariant(wxString(truncateText(book.description, 100))));
 
         bookList->AppendItem(data);
