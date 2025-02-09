@@ -30,6 +30,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     Bind(wxEVT_MENU, [&](wxCommandEvent&) { Close(); }, wxID_EXIT);
 
     bookList = new wxDataViewListCtrl(this, wxID_ANY, wxDefaultPosition, wxSize(800, 400));
+    bookList->AppendTextColumn("ID", wxDATAVIEW_CELL_INERT, 0, wxALIGN_LEFT, wxDATAVIEW_COL_HIDDEN); // Hidden column
     bookList->AppendTextColumn("Title", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
     bookList->AppendTextColumn("Author", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
     bookList->AppendTextColumn("Language", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
@@ -60,6 +61,7 @@ void MainFrame::LoadBooks() {
 
     for (const auto& book : books) {
         wxVector<wxVariant> data;
+        data.push_back(wxVariant(wxString::Format("%d", book.id))); // ID in hidden column
         data.push_back(wxVariant(wxString(book.title)));
         data.push_back(wxVariant(wxString(book.author)));
         data.push_back(wxVariant(wxString(book.language)));
@@ -74,9 +76,10 @@ void MainFrame::LoadBooks() {
 void MainFrame::OnColumnHeaderClick(wxDataViewEvent& event) {
     int column = event.GetColumn();
     if (column == sortColumn) {
-        sortAscending = !sortAscending;
+        sortAscending = !sortAscending; // if we click on the same column, we change the sort order
     }
     else {
+        // otherwise, select a new column and set the sorting in ascending order
         sortColumn = column;
         sortAscending = true;
     }
@@ -92,13 +95,27 @@ void MainFrame::OnAddBook(wxCommandEvent& event) {
 }
 
 void MainFrame::OnEditBook(wxCommandEvent& event) {
-    int selectedRow = bookList->GetSelectedRow();
-    if (selectedRow == wxNOT_FOUND) {
+    wxDataViewItem selected = bookList->GetSelection();
+    if (!selected.IsOk()) {
         wxMessageBox("Please select a book to edit.");
         return;
     }
 
-    BookModel book = db.GetBooks()[selectedRow];
+    wxVariant idVariant;
+    bookList->GetValue(idVariant, bookList->ItemToRow(selected), 0);
+    int bookId = wxAtoi(idVariant.GetString());
+
+    auto books = db.GetBooks();
+    auto it = std::find_if(books.begin(), books.end(), [bookId](const BookModel& book) {
+        return book.id == bookId;
+        });
+
+    if (it == books.end()) {
+        wxMessageBox("Book not found.");
+        return;
+    }
+
+    BookModel book = *it;
     BookDialog dlg(this, "Edit Book");
     dlg.SetBook(book);
     if (dlg.ShowModal() == wxID_OK) {
@@ -107,22 +124,29 @@ void MainFrame::OnEditBook(wxCommandEvent& event) {
     }
 }
 
+
 void MainFrame::OnAbout(wxCommandEvent& event) {
     AboutDialog dlg(this);
     dlg.ShowModal();
 }
 
 void MainFrame::OnDeleteBook(wxCommandEvent& event) {
-    int selectedRow = bookList->GetSelectedRow();
-    if (selectedRow == wxNOT_FOUND) {
+    wxDataViewItem selected = bookList->GetSelection();
+    if (!selected.IsOk()) {
         wxMessageBox("Please select a book to delete.");
         return;
     }
 
-    int bookId = db.GetBooks()[selectedRow].id;
-    db.DeleteBook(bookId);
-    LoadBooks();
+    wxVariant idVariant;
+    bookList->GetValue(idVariant, bookList->ItemToRow(selected), 0);
+    int bookId = wxAtoi(idVariant.GetString());
+
+    if (wxMessageBox("Are you sure you want to delete this book?", "Confirm Deletion", wxYES_NO | wxICON_QUESTION) == wxYES) {
+        db.DeleteBook(bookId);
+        LoadBooks();
+    }
 }
+
 
 void MainFrame::OnKeyDown(wxKeyEvent& event) {
     if (event.GetKeyCode() == WXK_DELETE) {

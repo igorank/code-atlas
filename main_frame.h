@@ -12,8 +12,8 @@ private:
 	wxDataViewListCtrl* bookList;
 	Database db;
 	
-	int sortColumn;
-	bool sortAscending;
+	int sortColumn;	// current column to sort
+	bool sortAscending;	// sort order (true for ascending)
 
 	void LoadBooks();
 
