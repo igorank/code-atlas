@@ -154,15 +154,20 @@ void MainFrame::OnDeleteBook(wxCommandEvent& event) {
 
 void MainFrame::OnKeyDown(wxKeyEvent& event) {
     if (event.GetKeyCode() == WXK_DELETE) {
-        int selectedRow = bookList->GetSelectedRow();
-        if (selectedRow == wxNOT_FOUND) {
+        wxDataViewItem selected = bookList->GetSelection();
+        if (!selected.IsOk()) {
             wxMessageBox("Please select a book to delete.");
             return;
         }
 
-        int bookId = db.GetBooks()[selectedRow].id;
-        db.DeleteBook(bookId);
-        LoadBooks();
+        wxVariant idVariant;
+        bookList->GetValue(idVariant, bookList->ItemToRow(selected), 0); // get ID from hidden column
+        int bookId = wxAtoi(idVariant.GetString());
+
+        if (wxMessageBox("Are you sure you want to delete this book?", "Confirm", wxYES_NO | wxICON_WARNING) == wxYES) {
+            db.DeleteBook(bookId);
+            LoadBooks();
+        }
     }
     else {
         event.Skip();
