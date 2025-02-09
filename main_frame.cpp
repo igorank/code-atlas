@@ -1,6 +1,6 @@
 #include "main_frame.h"
 
-MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size): wxFrame(NULL, wxID_ANY, title, pos, size), db("catalog.db")
+MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size): wxFrame(NULL, wxID_ANY, title, pos, size), db("catalog.db"), sortColumn(0), sortAscending(true)
 {
     wxIcon appIcon;
     if (!appIcon.LoadFile("icon.ico", wxBITMAP_TYPE_ICO)) {
@@ -37,6 +37,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     bookList->AppendTextColumn("Description", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
 
     bookList->Bind(wxEVT_CHAR_HOOK, &MainFrame::OnKeyDown, this);
+    bookList->Bind(wxEVT_DATAVIEW_COLUMN_HEADER_CLICK, &MainFrame::OnColumnHeaderClick, this);
 
     LoadBooks();
 }
@@ -44,7 +45,20 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
 void MainFrame::LoadBooks() {
     bookList->DeleteAllItems();
 
-    for (const auto& book : db.GetBooks()) {
+    auto books = db.GetBooks();
+    std::sort(books.begin(), books.end(), [&](const BookModel& a, const BookModel& b) {
+        switch (sortColumn) {
+        case 0: return sortAscending ? a.title < b.title : a.title > b.title;
+        case 1: return sortAscending ? a.author < b.author : a.author > b.author;
+        case 2: return sortAscending ? a.language < b.language : a.language > b.language;
+        case 3: return sortAscending ? a.year < b.year : a.year > b.year;
+        case 4: return sortAscending ? a.description < b.description : a.description > b.description;
+        default: return true;
+        }
+        });
+
+
+    for (const auto& book : books) {
         wxVector<wxVariant> data;
         data.push_back(wxVariant(wxString(book.title)));
         data.push_back(wxVariant(wxString(book.author)));
@@ -57,6 +71,17 @@ void MainFrame::LoadBooks() {
     }
 }
 
+void MainFrame::OnColumnHeaderClick(wxDataViewEvent& event) {
+    int column = event.GetColumn();
+    if (column == sortColumn) {
+        sortAscending = !sortAscending;
+    }
+    else {
+        sortColumn = column;
+        sortAscending = true;
+    }
+    LoadBooks();
+}
 
 void MainFrame::OnAddBook(wxCommandEvent& event) {
     BookDialog dlg(this, "Add Book");

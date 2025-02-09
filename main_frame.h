@@ -12,6 +12,9 @@ private:
 	wxDataViewListCtrl* bookList;
 	Database db;
 	
+	int sortColumn;
+	bool sortAscending;
+
 	void LoadBooks();
 
 	void OnAddBook(wxCommandEvent& event);
@@ -20,6 +23,7 @@ private:
 	void OnDeleteBook(wxCommandEvent& event);
 	
 	void OnKeyDown(wxKeyEvent& event);
+	void OnColumnHeaderClick(wxDataViewEvent& event);
 
 public:
 	MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
