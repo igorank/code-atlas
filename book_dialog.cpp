@@ -1,7 +1,7 @@
 #include "book_dialog.h"
 
 BookDialog::BookDialog(wxWindow* parent, const wxString& title)
-    : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(400, 500)) {
+    : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(400, 600)) {
 
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -27,6 +27,14 @@ BookDialog::BookDialog(wxWindow* parent, const wxString& title)
     languageCtrl->Append("Kotlin");
     languageCtrl->Append("Rust");
     mainSizer->Add(languageCtrl, 0, wxEXPAND | wxALL, 5);
+
+    mainSizer->Add(new wxStaticText(this, wxID_ANY, "Publisher"), 0, wxALL, 5);
+    publisherCtrl = new wxTextCtrl(this, wxID_ANY);
+    mainSizer->Add(publisherCtrl, 0, wxEXPAND | wxALL, 5);
+
+    mainSizer->Add(new wxStaticText(this, wxID_ANY, "ISBN"), 0, wxALL, 5);
+    isbnCtrl = new wxTextCtrl(this, wxID_ANY);
+    mainSizer->Add(isbnCtrl, 0, wxEXPAND | wxALL, 5);
 
     mainSizer->Add(new wxStaticText(this, wxID_ANY, "Year"), 0, wxALL, 5);
     yearCtrl = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1900, 2025);
@@ -60,6 +68,10 @@ void BookDialog::OnSave(wxCommandEvent& event) {
         wxMessageBox("Please select a programming language.", "Validation Error", wxOK | wxICON_ERROR);
         return;
     }
+    if (isbnCtrl->GetValue().IsEmpty()) {
+        wxMessageBox("Please enter an ISBN.", "Validation Error", wxOK | wxICON_ERROR);
+        return;
+    }
 
     wxString sanitizedDescription = descriptionCtrl->GetValue();
     sanitizedDescription.Replace("\n", "");
@@ -74,6 +86,8 @@ BookModel BookDialog::GetBook() const {
         titleCtrl->GetValue().ToStdString(),
         authorCtrl->GetValue().ToStdString(),
         languageCtrl->GetStringSelection().ToStdString(),
+        publisherCtrl->GetValue().ToStdString(),
+        isbnCtrl->GetValue().ToStdString(),
         yearCtrl->GetValue(),
         descriptionCtrl->GetValue().ToStdString()
     };
@@ -83,6 +97,8 @@ void BookDialog::SetBook(const BookModel& book) {
     titleCtrl->SetValue(book.title);
     authorCtrl->SetValue(book.author);
     languageCtrl->SetStringSelection(book.language);
+    publisherCtrl->SetValue(book.publisher);
+    isbnCtrl->SetValue(book.isbn);
     yearCtrl->SetValue(book.year);
     descriptionCtrl->SetValue(book.description);
     currentBookId = book.id;

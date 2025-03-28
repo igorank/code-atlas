@@ -12,6 +12,8 @@ Database::Database(const std::string& dbPath) {
             title TEXT NOT NULL,
             author TEXT NOT NULL,
             language TEXT NOT NULL,
+            publisher TEXT,
+            isbn TEXT NOT NULL,
             year INTEGER,
             description TEXT
         );
@@ -42,8 +44,10 @@ std::vector<BookModel> Database::GetBooks() {
                 reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)),
                 reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2)),
                 reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3)),
-                sqlite3_column_int(stmt, 4),
-                reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5))
+                reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4)),
+                reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5)),
+                sqlite3_column_int(stmt, 6),
+                reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7))
                 });
         }
     }
@@ -53,25 +57,29 @@ std::vector<BookModel> Database::GetBooks() {
 
 void Database::AddBook(const BookModel& book) {
     sqlite3_stmt* stmt;
-    sqlite3_prepare_v2(db, "INSERT INTO books (title, author, language, year, description) VALUES (?, ?, ?, ?, ?)", -1, &stmt, nullptr);
+    sqlite3_prepare_v2(db, "INSERT INTO books (title, author, language, publisher, isbn, year, description) VALUES (?, ?, ?, ?, ?, ?, ?)", -1, &stmt, nullptr);
     sqlite3_bind_text(stmt, 1, book.title.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 2, book.author.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 3, book.language.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(stmt, 4, book.year);
-    sqlite3_bind_text(stmt, 5, book.description.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 4, book.publisher.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 5, book.isbn.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, 6, book.year);
+    sqlite3_bind_text(stmt, 7, book.description.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_step(stmt);
     sqlite3_finalize(stmt);
 }
 
 void Database::UpdateBook(const BookModel& book) {
     sqlite3_stmt* stmt;
-    sqlite3_prepare_v2(db, "UPDATE books SET title = ?, author = ?, language = ?, year = ?, description = ? WHERE id = ?", -1, &stmt, nullptr);
+    sqlite3_prepare_v2(db, "UPDATE books SET title = ?, author = ?, language = ?, publisher = ?, isbn = ?, year = ?, description = ? WHERE id = ?", -1, &stmt, nullptr);
     sqlite3_bind_text(stmt, 1, book.title.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 2, book.author.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 3, book.language.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(stmt, 4, book.year);
-    sqlite3_bind_text(stmt, 5, book.description.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(stmt, 6, book.id);
+    sqlite3_bind_text(stmt, 4, book.publisher.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 5, book.isbn.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, 6, book.year);
+    sqlite3_bind_text(stmt, 7, book.description.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, 8, book.id);
     sqlite3_step(stmt);
     sqlite3_finalize(stmt);
 }

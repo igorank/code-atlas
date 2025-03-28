@@ -7,7 +7,7 @@ bool App::OnInit()
 
     wxIcon appIcon("icon.ico", wxBITMAP_TYPE_ICO);
 
-    MainFrame* frame = new MainFrame("CodeAtlas", wxDefaultPosition, wxSize(640, 480));
+    MainFrame* frame = new MainFrame("CodeAtlas", wxDefaultPosition, wxSize(800, 600));
     frame->SetIcons(wxIconBundle(appIcon));
     frame->Show(true);
     return true;

@@ -34,6 +34,8 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     bookList->AppendTextColumn("Title", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
     bookList->AppendTextColumn("Author", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
     bookList->AppendTextColumn("Language", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
+    bookList->AppendTextColumn("Publisher", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
+    bookList->AppendTextColumn("ISBN", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
     bookList->AppendTextColumn("Year", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
     bookList->AppendTextColumn("Description", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
 
@@ -53,8 +55,10 @@ void MainFrame::LoadBooks() {
         case 1: return sortAscending ? a.title < b.title : a.title > b.title;
         case 2: return sortAscending ? a.author < b.author : a.author > b.author;
         case 3: return sortAscending ? a.language < b.language : a.language > b.language;
-        case 4: return sortAscending ? a.year < b.year : a.year > b.year;
-        case 5: {
+        case 4: return sortAscending ? a.publisher < b.publisher : a.publisher > b.publisher;
+        case 5: return sortAscending ? a.isbn < b.isbn : a.isbn > b.isbn;
+        case 6: return sortAscending ? a.year < b.year : a.year > b.year;
+        case 7: {
             std::string descA = a.description.substr(0, 100);
             std::string descB = b.description.substr(0, 100);
             return sortAscending ? descA < descB : descA > descB;
@@ -70,6 +74,8 @@ void MainFrame::LoadBooks() {
         data.push_back(wxVariant(wxString(book.title)));
         data.push_back(wxVariant(wxString(book.author)));
         data.push_back(wxVariant(wxString(book.language)));
+        data.push_back(wxVariant(wxString(book.publisher)));
+        data.push_back(wxVariant(wxString(book.isbn)));
         data.push_back(wxVariant(wxString::Format("%d", book.year)));
         data.push_back(wxVariant(wxString(truncateText(book.description, 100))));
 

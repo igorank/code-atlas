@@ -15,6 +15,8 @@ private:
     wxTextCtrl* titleCtrl;
     wxTextCtrl* authorCtrl;
     wxChoice* languageCtrl;
+    wxTextCtrl* publisherCtrl;
+    wxTextCtrl* isbnCtrl;
     wxSpinCtrl* yearCtrl;
     wxTextCtrl* descriptionCtrl;
 
@@ -22,4 +24,3 @@ private:
 
     int currentBookId = -1;
 };
-
